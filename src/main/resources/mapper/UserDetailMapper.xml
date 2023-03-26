@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ls.dao.UserDetailDao">
+
+    <select id="getUserDetailByID" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            t.USER_ID user_id,
+            t.USER_ROLE user_role,
+            t.USER_STATE user_state,
+            t.CREATE_TIME create_time,
+            t.LOCK_TIME lock_time,
+            t.UNLOCK_TIME unlock_time
+        FROM
+            user_detail t
+        WHERE t.USER_ID = #{id}
+    </select>
+
+    <insert id="insertUserDetail">
+        insert into user_detail(USER_ID,CREATE_TIME,LOCK_TIME,UNLOCK_TIME)
+        values(#{user_id},#{create_time},#{lock_time},#{unlock_time})
+    </insert>
+
+    <delete id="deleteUserDetail">
+        delete from user_detail where USER_ID = #{id}
+    </delete>
+
+    <update id="updateUserRole">
+        update user_detail set USER_ROLE=#{role}
+         where USER_ID = #{id}
+    </update>
+
+    <update id="updateUserState">
+        update user_detail set USER_STATE=#{state},LOCK_TIME=#{locktime},UNLOCK_TIME=#{unlocktime}
+         where USER_ID = #{id}
+    </update>
+
+    <select id="getUnlockUser" resultType="com.ls.pojo.user.UserDetail">
+        SELECT *from user_detail t where t.USER_STATE = '1'
+    </select>
+
+    <update id="autoUpdataUserState">
+        update user_detail set USER_STATE='0',LOCK_TIME=null,UNLOCK_TIME=null
+         where USER_ID = #{id}
+    </update>
+</mapper>

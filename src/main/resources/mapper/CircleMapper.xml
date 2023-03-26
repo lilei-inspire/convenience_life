@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ls.dao.CircleDao">
+
+    <!--动态列表-->
+    <select id="getDynamicList" resultType="com.ls.pojo.circle.Dynamic">
+             SELECT *FROM circle_dynamic
+    </select>
+    <select id="getDynamicListByUserID" resultType="com.ls.pojo.circle.Dynamic">
+             SELECT *FROM circle_dynamic t where t.USER_ID = #{id}
+    </select>
+    <!--评论列表-->
+    <select id="getComments" resultType="com.ls.pojo.circle.Comment">
+             SELECT t.REVIEW,t.CONTENT FROM circle_comment t WHERE t.DYNAMIC_ID = #{id}
+    </select>
+
+    <!--评论列表-->
+    <select id="getLikes" resultType="com.ls.pojo.circle.Like">
+             SELECT t.LIKER_ID,t.LIKER_NAME FROM circle_like t WHERE t.DYNAMIC_ID = #{id}
+    </select>
+
+    <!--新增动态-->
+    <insert id="insertDynamic">
+        insert into circle_dynamic (USER_ID,NICK_NAME,TEXT,LOCATION,TIME,HEAD,IMGS)
+        values(#{user_id},#{nick_name},#{text},#{location},#{time},#{head},#{imgs})
+    </insert>
+
+    <!--新增点赞-->
+    <insert id="insertLike">
+        insert into circle_like (DYNAMIC_ID,LIKER_ID,LIKER_NAME)
+        values(#{dynamic_id},#{liker_id},#{liker_name})
+    </insert>
+
+    <!--新增评论-->
+    <insert id="insertComment">
+        insert into circle_comment (DYNAMIC_ID,REVIEW,CONTENT)
+        values(#{id},#{review},#{content})
+    </insert>
+
+    <delete id="deleteDynamic">
+        delete from circle_dynamic t where t.DYNAMIC_ID = #{id}
+    </delete>
+    <delete id="deleteLike">
+        delete from circle_like t where t.DYNAMIC_ID = #{id}
+    </delete>
+    <delete id="deleteComment">
+        delete from circle_comment t where t.DYNAMIC_ID = #{id}
+    </delete>
+
+
+    <delete id="deleteAllDynamic">
+        delete from circle_dynamic t where t.USER_ID = #{id}
+    </delete>
+    <!-- 批量删除点赞 -->
+    <delete id="deleteAllLike" parameterType="int">
+        delete from circle_dynamic t where t.DYNAMIC_ID in
+        <foreach item="dyanamics" collection="array" open="(" separator="," close=")">
+            #{dyanamics}
+        </foreach>
+    </delete>
+    <!-- 批量删除评论 -->
+    <delete id="deleteAllComment" parameterType="int">
+        delete from circle_dynamic t where t.DYNAMIC_ID in
+        <foreach item="dyanamics" collection="array" open="(" separator="," close=")">
+            #{dyanamics}
+        </foreach>
+    </delete>
+
+</mapper>

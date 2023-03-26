@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ls.dao.UserBaseDao">
+
+    <select id="getUserByUserName" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            u.USER_ID user_id,
+            u.USER_NAME user_name,
+            u.PASSWORD password,
+            u.NICK_NAME nick_name,
+            u.EMAIL email,
+            U.SEX sex,
+            U.HEAD head
+        FROM
+            user_base u
+        WHERE u.USER_NAME = #{username}
+    </select>
+
+    <select id="getUserByID" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            u.USER_ID user_id,
+            u.USER_NAME user_name,
+            u.PASSWORD password,
+            u.NICK_NAME nick_name,
+            u.EMAIL email,
+            U.SEX sex,
+            U.HEAD head
+        FROM
+            user_base u
+        WHERE u.USER_ID = #{id}
+    </select>
+
+    <insert id="insertUserBase">
+        insert into user_base(USER_ID,USER_NAME,PASSWORD,NICK_NAME,Email,SEX)
+        values(#{user_id},#{user_name},#{password},#{nick_name},#{email},#{sex})
+        <selectKey keyProperty="user_id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <delete id="deleteUserBase">
+        delete from user_base where USER_ID = #{id}
+    </delete>
+
+    <update id="updateUserBase">
+        update user_base set USER_NAME=#{user.user_name},PASSWORD=#{user.password},NICK_NAME=#{user.nick_name},
+        Email=#{user.email},SEX=#{user.sex},HEAD=#{user.head} where USER_ID = #{id}
+    </update>
+
+    <select id="getUserBaseList" resultType="com.ls.pojo.user.UserBase">
+        SELECT *FROM user_base t where t.NICK_NAME like concat(concat('%',#{name}),'%')
+    </select>
+    
+</mapper>
